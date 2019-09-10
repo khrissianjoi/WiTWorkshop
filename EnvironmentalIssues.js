@@ -18,7 +18,6 @@ function makeGraphs(data) {
             
             d['count'] = parseInt(d['count'])
         }
-        console.log(d['count'])
       });
     EnvironmentalIssuesPerYearBarChart(data)
     EnvironmentalIssuesPerYearLineChart(data)
@@ -89,7 +88,6 @@ function EnvironmentalIssuesPerYearLineChart(data) {
         })
 }
 function EnvironmentalIssuesPerYearBarChart(CountryData) {
-    console.log(CountryData)
     var ndx = crossfilter(CountryData)
     var countryDim = ndx.dimension(dc.pluck("year"));
     var countryMix = countryDim.group().reduce(
