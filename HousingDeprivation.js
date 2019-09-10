@@ -13,10 +13,11 @@ fetch(url).then(response =>
 
 function makeGraphs(data) {
     data = dataConversion(data)
-    // data.forEach(function(d){
-    //     d['count'] = parseInt(d['count'])
-    //   });
-    AsylumDescisionPerYearBarChart(data)
+    data.forEach(function(d){
+        d['count'] = parseInt(d['count'])
+      });
+    HousingDeprivationPerYearBarChart(data)
+    HousingDeprivationPerYearLineChart(data)
     dc.renderAll();
 }
 
@@ -39,8 +40,49 @@ function dataConversion(data) {
     }
     return cleanData
 }
-
-function AsylumDescisionPerYearBarChart(CountryData) {
+function HousingDeprivationPerYearLineChart(data) {
+    var ndx = crossfilter(data)
+    var dateDim = ndx.dimension(dc.pluck("year"));
+    var sentiGroup = dateDim.group().reduce(
+        function(p, v) {
+            //average calculator
+            p.count++;
+            p.total += parseInt(v['count']);
+            p.average = p.total / p.count;
+            return p;
+        },
+        function(p, v) {
+            p.count--;
+            if (p.count == 0) {
+                p.total = 0;
+                p.average = 0;
+            } else {
+                p.total -= v['count'];
+                p.average = p.total / p.count;
+            }
+            return p;
+        },
+        function () {
+            return { count: 0, total: 0, average: 0};
+        }
+    )
+    console.log(sentiGroup.all())
+    var chart = dc.lineChart("#HousingDeprivationLine")
+        .width(1800)
+        .height(500)
+        .margins({top: 10, right: 50, bottom: 50, left: 50})
+        .x(d3.scale.ordinal())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .xAxisLabel('Year')
+        .yAxisLabel('Housing Deprivation')
+        .dimension(dateDim)
+        .group(sentiGroup)
+        .valueAccessor(function(d) {
+            return d.value.average
+        })
+}
+function HousingDeprivationPerYearBarChart(CountryData) {
     console.log(CountryData)
     var ndx = crossfilter(CountryData)
     var countryDim = ndx.dimension(dc.pluck("year"));
