@@ -14,6 +14,7 @@ fetch(url).then(response =>
 function makeGraphs(data) {
     data = dataConversion(data)
     AsylumDescisionPerYearBarChart(data)
+    AsylumDescisionPerYearLineChart(data)
     dc.renderAll();
 }
 
@@ -35,6 +36,23 @@ function dataConversion(data) {
         }
     }
     return cleanData
+}
+
+function AsylumDescisionPerYearLineChart(data) {
+    var ndx = crossfilter(data)
+    var dateDim = ndx.dimension(dc.pluck("year"));
+    var sentiGroup = dateDim.group().reduceSum(dc.pluck("count"));
+    var chart = dc.lineChart("#AsylumDescisionLine")
+        .width(1800)
+        .height(500)
+        .margins({top: 10, right: 50, bottom: 50, left: 50})
+        .x(d3.scale.ordinal())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .xAxisLabel('Year')
+        .yAxisLabel('Asylum Decisions')
+        .dimension(dateDim)
+        .group(sentiGroup)
 }
 
 function AsylumDescisionPerYearBarChart(CountryData) {
