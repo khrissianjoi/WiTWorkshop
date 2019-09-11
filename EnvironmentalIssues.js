@@ -1,7 +1,7 @@
 
-const url = "https://script.google.com/macros/s/AKfycbytQHIRHVuI9dQugwZ8ZPpDpF4L_dDjKbq1gtAk8NWNgsXOS-x3/exec?topic=EnvironmentalIssues"
+const EnvironmentalIssuesURL = "https://script.google.com/macros/s/AKfycbytQHIRHVuI9dQugwZ8ZPpDpF4L_dDjKbq1gtAk8NWNgsXOS-x3/exec?topic=EnvironmentalIssues"
 
-fetch(url).then(response => 
+fetch(EnvironmentalIssuesURL).then(response => 
     response.json().then(data => ({
         data: data,
         status: response.status
@@ -15,7 +15,7 @@ function makeGraphs(data) {
     data = dataConversion(data)
     EnvironmentalIssuesPerYearBarChart(data)
     EnvironmentalIssuesPerYearLineChart(data)
-    test(data)
+    EnvironmentalIssuesHeatMap(data)
     dc.renderAll();
 }
 
@@ -125,9 +125,9 @@ function EnvironmentalIssuesPerYearLineChart(data) {
         })
 }
 
-function test(experiments) {
-    console.log(experiments)
-    var ndx    = crossfilter(experiments),
+function EnvironmentalIssuesHeatMap(data) {
+    console.log(data)
+    var ndx    = crossfilter(data),
         runDim = ndx.dimension(function(d) {return [d.country, d.year]; }),
         runGroup = runDim.group().reduce(
             function(p, v) {

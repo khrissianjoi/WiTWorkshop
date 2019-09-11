@@ -1,7 +1,7 @@
 
-const url = "https://script.google.com/macros/s/AKfycbytQHIRHVuI9dQugwZ8ZPpDpF4L_dDjKbq1gtAk8NWNgsXOS-x3/exec?topic=HousingDeprivation"
+const HousingDeprivationURL = "https://script.google.com/macros/s/AKfycbytQHIRHVuI9dQugwZ8ZPpDpF4L_dDjKbq1gtAk8NWNgsXOS-x3/exec?topic=HousingDeprivation"
 
-fetch(url).then(response => 
+fetch(HousingDeprivationURL).then(response => 
     response.json().then(data => ({
         data: data,
         status: response.status
@@ -15,7 +15,7 @@ function makeGraphs(data) {
     data = dataConversion(data)
     HousingDeprivationPerYearBarChart(data)
     HousingDeprivationPerYearLineChart(data)
-    test(data)
+    HousingDeprivationHeatMap(data)
     dc.renderAll();
 }
 
@@ -39,8 +39,8 @@ function dataConversion(data) {
     return cleanData
 }
 
-function HousingDeprivationPerYearBarChart(CountryData) {
-    var ndx = crossfilter(CountryData)
+function HousingDeprivationPerYearBarChart(data) {
+    var ndx = crossfilter(data)
     var countryDim = ndx.dimension(dc.pluck("year"));
     var countryMix = countryDim.group().reduce(
         function(p, v) {
@@ -124,9 +124,8 @@ function HousingDeprivationPerYearLineChart(data) {
         })
 }
 
-function test(experiments) {
-    console.log(experiments)
-    var ndx    = crossfilter(experiments),
+function HousingDeprivationHeatMap(data) {
+    var ndx    = crossfilter(data),
         runDim = ndx.dimension(function(d) {return [d.country, d.year]; }),
         runGroup = runDim.group().reduce(
             function(p, v) {
@@ -151,7 +150,6 @@ function test(experiments) {
                 return { count: 0, total: 0, average: 0};
             }
         )
-    console.log(runGroup.all())
     var chart = dc.heatMap("#HousingDeprivationHeatMap")
         .width(1800)
         .height(500)

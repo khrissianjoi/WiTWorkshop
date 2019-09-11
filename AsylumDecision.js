@@ -1,7 +1,7 @@
 
-const url = "https://script.google.com/macros/s/AKfycbytQHIRHVuI9dQugwZ8ZPpDpF4L_dDjKbq1gtAk8NWNgsXOS-x3/exec?topic=AsylumDecisions"
+const AsylumDecisionURL = "https://script.google.com/macros/s/AKfycbytQHIRHVuI9dQugwZ8ZPpDpF4L_dDjKbq1gtAk8NWNgsXOS-x3/exec?topic=AsylumDecisions"
 
-fetch(url).then(response => 
+fetch(AsylumDecisionURL).then(response => 
     response.json().then(data => ({
         data: data,
         status: response.status
@@ -15,7 +15,7 @@ function makeGraphs(data) {
     data = dataConversion(data)
     AsylumDescisionPerYearBarChart(data)
     AsylumDescisionPerYearLineChart(data)
-    test(data)
+    AsymlumDecisionHeatMap(data)
     dc.renderAll();
 }
 
@@ -74,19 +74,16 @@ function AsylumDescisionPerYearLineChart(data) {
         .group(yearGroup)
 }
 
-function test(experiments) {
-    console.log(experiments)
-    var ndx    = crossfilter(experiments),
+function AsymlumDecisionHeatMap(data) {
+    var ndx    = crossfilter(data),
         runDim = ndx.dimension(function(d) {return [d.country, d.year]; }),
         runGroup = runDim.group().reduceSum(function(d) { return d.count });
-    console.log(runGroup.all())
     var chart = dc.heatMap("#AsylumDescisionHeatMap")
-        .width(1800)
+        .width(2000)
         .height(500)
         .dimension(runDim)
         .group(runGroup)
-        .keyAccessor(function(d) { 
-            console.log(d)
+        .keyAccessor(function(d) {
             return d.key[0]; })
         .valueAccessor(function(d) { return d.key[1]; })
         .colorAccessor(function(d) { return +d.value; })
