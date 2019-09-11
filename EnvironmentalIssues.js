@@ -152,9 +152,8 @@ function EnvironmentalIssuesHeatMap(data) {
                 return { count: 0, total: 0, average: 0};
             }
         )
-    console.log(runGroup.all())
     var chart = dc.heatMap("#EnvironmentalIssuesHeatMap")
-        .width(1800)
+        .width(2000)
         .height(500)
         .dimension(runDim)
         .group(runGroup)

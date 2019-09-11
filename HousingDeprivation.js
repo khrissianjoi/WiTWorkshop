@@ -151,12 +151,11 @@ function HousingDeprivationHeatMap(data) {
             }
         )
     var chart = dc.heatMap("#HousingDeprivationHeatMap")
-        .width(1800)
+        .width(2000)
         .height(500)
         .dimension(runDim)
         .group(runGroup)
-        .keyAccessor(function(d) { 
-            // console.log(d)
+        .keyAccessor(function(d) {
             return d.key[0]; })
         .valueAccessor(function(d) { return d.key[1]; })
         .colorAccessor(function(d) { return +d.value.average; })

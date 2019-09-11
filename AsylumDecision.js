@@ -102,8 +102,7 @@ function test(data) {
                             countries.push(d.country)}})
     var chart = dc.barChart("#test");
     var ndx                 = crossfilter(data),
-        runDimension        = ndx.dimension(function(d) {
-            return d.country;}),
+        runDimension        = ndx.dimension(dc.pluck("country")),
         speedSumGroup       = runDimension.group().reduce(function(p, v) {
             p[v.year] = (p[v.year] || 0) + v.count;
             return p;
