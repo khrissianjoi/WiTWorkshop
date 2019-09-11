@@ -35,6 +35,7 @@ function dataConversion(data) {
             }
         }
     }
+    console.log(cleanData)
     return cleanData
 }
 
