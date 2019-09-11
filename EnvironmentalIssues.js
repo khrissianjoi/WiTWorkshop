@@ -40,8 +40,8 @@ function dataConversion(data) {
 }
 
 
-function EnvironmentalIssuesPerYearBarChart(CountryData) {
-    var ndx = crossfilter(CountryData)
+function EnvironmentalIssuesPerYearBarChart(data) {
+    var ndx = crossfilter(data)
     var countryDim = ndx.dimension(dc.pluck("year"));
     var countryMix = countryDim.group().reduce(
         function(p, v) {
@@ -166,7 +166,7 @@ function EnvironmentalIssuesHeatMap(data) {
         .title(function(d) {
             return "Country:   " + d.key[0] + "\n" +
                 "Year:  " + d.key[1] + "\n" +
-                "Average: " + (d.value.average * 100) +"%";})
+                "Average: " + (Math.round(d.value.average * 100)) +"%";})
         .colors(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"])
         .calculateColorDomain();
     }
