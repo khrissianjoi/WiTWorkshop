@@ -83,10 +83,10 @@ function HousingDeprivationPerYearBarChart(CountryData) {
 
 function HousingDeprivationPerYearLineChart(data) {
     var ndx = crossfilter(data)
-    var dateDim = ndx.dimension(dc.pluck("year"));
-    var sentiGroup = dateDim.group().reduce(
+    var yearDim = ndx.dimension(dc.pluck("year"));
+    var yearGroup = yearDim.group().reduce(
+        //average calculator
         function(p, v) {
-            //average calculator
             p.count++;
             p.total += parseInt(v['count']);
             p.average = p.total / p.count;
@@ -116,8 +116,8 @@ function HousingDeprivationPerYearLineChart(data) {
         .brushOn(false)
         .xAxisLabel('Year')
         .yAxisLabel('Housing Deprivation')
-        .dimension(dateDim)
-        .group(sentiGroup)
+        .dimension(yearDim)
+        .group(yearGroup)
         .valueAccessor(function(d) {
             return d.value.average
         })

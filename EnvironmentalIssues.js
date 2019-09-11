@@ -84,8 +84,8 @@ function EnvironmentalIssuesPerYearBarChart(CountryData) {
 
 function EnvironmentalIssuesPerYearLineChart(data) {
     var ndx = crossfilter(data)
-    var dateDim = ndx.dimension(dc.pluck("year"));
-    var sentiGroup = dateDim.group().reduce(
+    var yearDim = ndx.dimension(dc.pluck("year"));
+    var yearGroup = yearDim.group().reduce(
         function(p, v) {
             //average calculator
             p.count++;
@@ -117,8 +117,8 @@ function EnvironmentalIssuesPerYearLineChart(data) {
         .brushOn(false)
         .xAxisLabel('Year')
         .yAxisLabel('Housing Deprivation')
-        .dimension(dateDim)
-        .group(sentiGroup)
+        .dimension(yearDim)
+        .group(yearGroup)
         .valueAccessor(function(d) {
             return d.value.average
         })

@@ -58,10 +58,10 @@ function AsylumDescisionPerYearBarChart(CountryData) {
 
 function AsylumDescisionPerYearLineChart(data) {
     var ndx = crossfilter(data)
-    var dateDim = ndx.dimension(dc.pluck("year"));
-    var sentiGroup = dateDim.group().reduce(
+    var yearDim = ndx.dimension(dc.pluck("year"));
+    var yearGroup = yearDim.group().reduce(
+        //average calculator
         function(p, v) {
-            //average calculator
             p.count++;
             p.total += parseInt(v['count']);
             p.average = p.total / p.count;
@@ -91,8 +91,8 @@ function AsylumDescisionPerYearLineChart(data) {
         .brushOn(false)
         .xAxisLabel('Year')
         .yAxisLabel('Asylum Decisions')
-        .dimension(dateDim)
-        .group(sentiGroup)
+        .dimension(yearDim)
+        .group(yearGroup)
         .valueAccessor(function(d) {
             return d.value.average
         })
