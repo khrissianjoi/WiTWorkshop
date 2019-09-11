@@ -16,6 +16,7 @@ function makeGraphs(data) {
     AsylumDescisionPerYearBarChart(data)
     AsylumDescisionPerYearLineChart(data)
     AsymlumDecisionHeatMap(data)
+    test(data)
     dc.renderAll();
 }
 
@@ -94,3 +95,51 @@ function AsymlumDecisionHeatMap(data) {
         .colors(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"])
         .calculateColorDomain();
     }
+
+function test(data) {
+    countries = []
+    data.forEach(d => {if(!(countries.includes(d.country))) {
+                            countries.push(d.country)}})
+    var chart = dc.barChart("#test");
+    var ndx                 = crossfilter(data),
+        runDimension        = ndx.dimension(function(d) {
+            return d.country;}),
+        speedSumGroup       = runDimension.group().reduce(function(p, v) {
+            p[v.year] = (p[v.year] || 0) + v.count;
+            return p;
+        }, function(p, v) {
+            p[v.year] = (p[v.year] || 0) - v.count;
+            return p;
+        }, function() {
+            return {};
+        });
+    function sel_stack(i) {
+        return function(d) {
+            return d.value[i];
+        };
+    }
+    console.log(countries)
+    chart
+        .width(1800)
+        .height(500)
+        .x(d3.scale.ordinal()
+            .domain(countries))
+        .margins({top: 20, right: 50, bottom: 100, left: 80})
+        .brushOn(false)
+        .clipPadding(10)
+        .title(function(d) {
+            return d.key + '[' + this.layer + ']: ' + d.value[this.layer];
+        })
+        .dimension(runDimension)
+        .group(speedSumGroup,'2013', sel_stack('2013'))
+        .renderLabel(true);
+
+    chart.legend(dc.legend());
+    dc.override(chart, 'legendables', function() {
+        var items = chart._legendables();
+        return items.reverse();
+    });
+    for(var i = 2014; i<2019; ++i)
+        chart.stack(speedSumGroup, ''+i, sel_stack(i));
+
+}

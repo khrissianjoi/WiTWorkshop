@@ -21,16 +21,16 @@ function dataConversion(data) {
 // convert 
 
 // [ {
-    // 2013: 0
-    // 2014: 0
-    // 2015: 0
-    // 2016: 0
-    // 2017: 0
-    // 2018: 0
-    // citizen: "EXT_EU28"
-    // country: "Austria"
-    // decision: "TEMP_PROT"
-    // geo\time: "AT"}]
+//     2013: 0
+//     2014: 0
+//     2015: 0
+//     2016: 0
+//     2017: 0
+//     2018: 0
+//     citizen: "EXT_EU28"
+//     country: "Austria"
+//     decision: "TEMP_PROT"
+//     geo\time: "AT"}]
 
 //  to : [{ citizen: "EXT_EU28"
 // count: 12635
