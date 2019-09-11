@@ -15,6 +15,7 @@ function makeGraphs(data) {
     data = dataConversion(data)
     EnvironmentalIssuesPerYearBarChart(data)
     EnvironmentalIssuesPerYearLineChart(data)
+    test(data)
     dc.renderAll();
 }
 
@@ -123,3 +124,49 @@ function EnvironmentalIssuesPerYearLineChart(data) {
             return d.value.average
         })
 }
+
+function test(experiments) {
+    console.log(experiments)
+    var ndx    = crossfilter(experiments),
+        runDim = ndx.dimension(function(d) {return [d.country, d.year]; }),
+        runGroup = runDim.group().reduce(
+            function(p, v) {
+                //average calculator
+                p.count++;
+                p.total += v['count'];
+                p.average = p.total / p.count;
+                return p;
+            },
+            function(p, v) {
+                p.count--;
+                if (p.count == 0) {
+                    p.total = 0;
+                    p.average = 0;
+                } else {
+                    p.total -= v['count'];
+                    p.average = p.total / p.count;
+                }
+                return p;
+            },
+            function () {
+                return { count: 0, total: 0, average: 0};
+            }
+        )
+    console.log(runGroup.all())
+    var chart = dc.heatMap("#EnvironmentalIssuesHeatMap")
+        .width(1800)
+        .height(500)
+        .dimension(runDim)
+        .group(runGroup)
+        .keyAccessor(function(d) { 
+            // console.log(d)
+            return d.key[0]; })
+        .valueAccessor(function(d) { return d.key[1]; })
+        .colorAccessor(function(d) { return +d.value.average; })
+        .title(function(d) {
+            return "Country:   " + d.key[0] + "\n" +
+                "Year:  " + d.key[1] + "\n" +
+                "Average: " + (d.value.average * 100) +"%";})
+        .colors(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"])
+        .calculateColorDomain();
+    }
