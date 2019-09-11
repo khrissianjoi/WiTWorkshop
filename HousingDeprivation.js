@@ -13,10 +13,11 @@ fetch(HousingDeprivationURL).then(response =>
 
 function makeGraphs(data) {
     data = dataConversion(data)
-    HousingDeprivationPerYearBarChart(data)
-    HousingDeprivationPerYearLineChart(data)
+    // HousingDeprivationPerYearBarChart(data)
+    // HousingDeprivationPerYearLineChart(data)
+
+    // dc.renderAll();
     HousingDeprivationHeatMap(data)
-    dc.renderAll();
 }
 
 function dataConversion(data) {
@@ -78,7 +79,7 @@ function HousingDeprivationPerYearBarChart(data) {
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Year")
-        .yAxisLabel("Average Percentage of Housing Deprivation")
+        .yAxisLabel("Average percent of Housing Deprivation incidents")
         .yAxis().ticks(20);
 }
 
@@ -111,12 +112,12 @@ function HousingDeprivationPerYearLineChart(data) {
     var chart = dc.lineChart("#HousingDeprivationLine")
         .width(1800)
         .height(500)
-        .margins({top: 20, right: 50, bottom: 100, left: 80})
+        .margins({top: 20, right: 20, bottom: 100, left: 20})
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .brushOn(false)
         .xAxisLabel('Year')
-        .yAxisLabel('Average Percentage of Housing Deprivation')
+        .yAxisLabel('Average percent of Housing Deprivation incidents')
         .dimension(yearDim)
         .group(yearGroup)
         .valueAccessor(function(d) {
@@ -152,7 +153,8 @@ function HousingDeprivationHeatMap(data) {
         )
     var chart = dc.heatMap("#HousingDeprivationHeatMap")
         .width(2000)
-        .height(500)
+        .height(700)
+        .margins({top: 20, right: 50, bottom: 100, left: 50})
         .dimension(runDim)
         .group(runGroup)
         .keyAccessor(function(d) {
@@ -165,4 +167,14 @@ function HousingDeprivationHeatMap(data) {
                 "Average: " + (Math.round(d.value.average)) +"%";})
         .colors(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"])
         .calculateColorDomain();
+    chart.render();
+    chart.selectAll('g.cols.axis > text')
+                .attr('transform', function (d) {
+                    var coord = this.getBBox();
+                    var x = coord.x + (coord.width/2),
+                        y = coord.y + (coord.height/2);
+                    return "rotate(-30 "+x+" "+y+")"
+                    })
+                .attr("font-size", "30px")
+        
     }

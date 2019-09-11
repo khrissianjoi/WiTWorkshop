@@ -13,11 +13,11 @@ fetch(AsylumDecisionURL).then(response =>
 
 function makeGraphs(data) {
     data = dataConversion(data)
-    AsylumDescisionPerYearBarChart(data)
-    AsylumDescisionPerYearLineChart(data)
+    // AsylumDescisionPerYearBarChart(data)
+    // AsylumDescisionPerYearLineChart(data)
     AsymlumDecisionHeatMap(data)
-    test(data)
-    dc.renderAll();
+    // test(data)
+    // dc.renderAll();
 }
 
 function dataConversion(data) {
@@ -54,7 +54,7 @@ function AsylumDescisionPerYearBarChart(CountryData) {
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Year")
-        .yAxisLabel("Total Asylum Descisions made")
+        .yAxisLabel("Total descisions made on Asylum Applications")
         .yAxis().ticks(20);
 }
 
@@ -70,7 +70,7 @@ function AsylumDescisionPerYearLineChart(data) {
         .xUnits(dc.units.ordinal)
         .brushOn(false)
         .xAxisLabel('Year')
-        .yAxisLabel('Total Asylum Decisions made')
+        .yAxisLabel('Total descisions made on Asylum Applications')
         .dimension(yearDim)
         .group(yearGroup)
 }
@@ -82,6 +82,7 @@ function AsymlumDecisionHeatMap(data) {
     var chart = dc.heatMap("#AsylumDescisionHeatMap")
         .width(2000)
         .height(500)
+        .margins({top: 20, right: 50, bottom: 100, left: 50})
         .dimension(runDim)
         .group(runGroup)
         .keyAccessor(function(d) {
@@ -94,6 +95,16 @@ function AsymlumDecisionHeatMap(data) {
                 "Count: " + d.value})
         .colors(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"])
         .calculateColorDomain();
+
+    chart.render();
+    chart.selectAll('g.cols.axis > text')
+                .attr('transform', function (d) {
+                    var coord = this.getBBox();
+                    var x = coord.x + (coord.width/2),
+                        y = coord.y + (coord.height/2);
+                    return "rotate(-30 "+x+" "+y+")"
+                    })
+                .attr("font-size", "30px")
     }
 
 function test(data) {
@@ -123,7 +134,6 @@ function test(data) {
         .height(500)
         .x(d3.scale.ordinal()
             .domain(countries))
-        .margins({top: 20, right: 50, bottom: 100, left: 80})
         .brushOn(false)
         .clipPadding(10)
         .title(function(d) {

@@ -2,7 +2,13 @@
     transform: translate(-30px,30px)rotate(-45deg);
     font-size: 15px;
   }
+g.cols.axis > text{
+  font-size: 15px;
+}
 
+g.rows.axis > text{
+  font-size: 15px;
+}
 .heat-box {
     stroke: #E6E6E6;
     stroke-width: 2px;

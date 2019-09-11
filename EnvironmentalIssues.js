@@ -13,10 +13,10 @@ fetch(EnvironmentalIssuesURL).then(response =>
 
 function makeGraphs(data) {
     data = dataConversion(data)
-    EnvironmentalIssuesPerYearBarChart(data)
-    EnvironmentalIssuesPerYearLineChart(data)
+    // EnvironmentalIssuesPerYearBarChart(data)
+    // EnvironmentalIssuesPerYearLineChart(data)
     EnvironmentalIssuesHeatMap(data)
-    dc.renderAll();
+    // dc.renderAll();
 }
 
 function dataConversion(data) {
@@ -66,6 +66,7 @@ function EnvironmentalIssuesPerYearBarChart(data) {
             return { count: 0, total: 0, average: 0};
         }
     )
+    formatter = d3.format(".0%")
     dc.barChart("#EnvironmentalIssues")
         .width(1550)
         .height(550)
@@ -79,8 +80,10 @@ function EnvironmentalIssuesPerYearBarChart(data) {
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Year")
-        .yAxisLabel("Average Percentage Enviromental Issues per Household")
-        .yAxis().ticks(20);
+        .yAxisLabel("Average percent of Enviromental Issues per household")
+        .yAxis().ticks(20)
+        .tickFormat(formatter);
+
 }
 
 function EnvironmentalIssuesPerYearLineChart(data) {
@@ -109,6 +112,8 @@ function EnvironmentalIssuesPerYearLineChart(data) {
             return { count: 0, total: 0, average: 0};
         }
     )
+
+    formatter = d3.format(".0%")
     var chart = dc.lineChart("#EnvironmentalIssuesLine")
         .width(1800)
         .height(500)
@@ -117,16 +122,17 @@ function EnvironmentalIssuesPerYearLineChart(data) {
         .xUnits(dc.units.ordinal)
         .brushOn(false)
         .xAxisLabel('Year')
-        .yAxisLabel('Average Percentage Enviromental Issues per Household')
+        .yAxisLabel('Average percent of Enviromental Issues per household')
         .dimension(yearDim)
         .group(yearGroup)
         .valueAccessor(function(d) {
             return d.value.average
         })
+        .yAxis().ticks(20)
+        .tickFormat(formatter);
 }
 
 function EnvironmentalIssuesHeatMap(data) {
-    console.log(data)
     var ndx    = crossfilter(data),
         runDim = ndx.dimension(function(d) {return [d.country, d.year]; }),
         runGroup = runDim.group().reduce(
@@ -152,9 +158,12 @@ function EnvironmentalIssuesHeatMap(data) {
                 return { count: 0, total: 0, average: 0};
             }
         )
+    
+    formatter = d3.format(".0%")
     var chart = dc.heatMap("#EnvironmentalIssuesHeatMap")
         .width(2000)
         .height(500)
+        .margins({top: 20, right: 50, bottom: 100, left: 50})
         .dimension(runDim)
         .group(runGroup)
         .keyAccessor(function(d) { 
@@ -167,5 +176,14 @@ function EnvironmentalIssuesHeatMap(data) {
                 "Year:  " + d.key[1] + "\n" +
                 "Average: " + (Math.round(d.value.average * 100)) +"%";})
         .colors(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"])
-        .calculateColorDomain();
+        .calculateColorDomain()
+        chart.render();
+        chart.selectAll('g.cols.axis > text')
+                    .attr('transform', function (d) {
+                        var coord = this.getBBox();
+                        var x = coord.x + (coord.width/2),
+                            y = coord.y + (coord.height/2);
+                        return "rotate(-30 "+x+" "+y+")"
+                        })
+                    .attr("font-size", "30px")
     }
