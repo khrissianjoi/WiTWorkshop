@@ -111,7 +111,7 @@ function EnvironmentalIssuesPerYearLineChart(data) {
     var chart = dc.lineChart("#EnvironmentalIssuesLine")
         .width(1800)
         .height(500)
-        .margins({top: 10, right: 50, bottom: 50, left: 50})
+        .margins({top: 20, right: 50, bottom: 100, left: 80})
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .brushOn(false)

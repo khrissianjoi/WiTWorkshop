@@ -52,48 +52,23 @@ function AsylumDescisionPerYearBarChart(CountryData) {
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Year")
-        .yAxisLabel("Asylum Descisions made")
+        .yAxisLabel("Total Asylum Descisions made")
         .yAxis().ticks(20);
 }
 
 function AsylumDescisionPerYearLineChart(data) {
     var ndx = crossfilter(data)
     var yearDim = ndx.dimension(dc.pluck("year"));
-    var yearGroup = yearDim.group().reduce(
-        //average calculator
-        function(p, v) {
-            p.count++;
-            p.total += parseInt(v['count']);
-            p.average = p.total / p.count;
-            return p;
-        },
-        function(p, v) {
-            p.count--;
-            if (p.count == 0) {
-                p.total = 0;
-                p.average = 0;
-            } else {
-                p.total -= v['count'];
-                p.average = p.total / p.count;
-            }
-            return p;
-        },
-        function () {
-            return { count: 0, total: 0, average: 0};
-        }
-    )
+    var yearGroup = yearDim.group().reduceSum(dc.pluck("count"))
     var chart = dc.lineChart("#AsylumDescisionLine")
         .width(1800)
         .height(500)
-        .margins({top: 10, right: 50, bottom: 50, left: 50})
+        .margins({top: 20, right: 50, bottom: 100, left: 80})
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .brushOn(false)
         .xAxisLabel('Year')
-        .yAxisLabel('Asylum Decisions')
+        .yAxisLabel('Total Asylum Decisions made')
         .dimension(yearDim)
         .group(yearGroup)
-        .valueAccessor(function(d) {
-            return d.value.average
-        })
 }
