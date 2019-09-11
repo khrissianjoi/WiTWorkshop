@@ -13,12 +13,6 @@ fetch(url).then(response =>
 
 function makeGraphs(data) {
     data = dataConversion(data)
-    data.forEach(function(d){
-        if(typeof d['count'] === 'string') {
-            
-            d['count'] = parseInt(d['count'])
-        }
-      });
     EnvironmentalIssuesPerYearBarChart(data)
     EnvironmentalIssuesPerYearLineChart(data)
     dc.renderAll();
@@ -114,7 +108,6 @@ function EnvironmentalIssuesPerYearLineChart(data) {
             return { count: 0, total: 0, average: 0};
         }
     )
-    console.log(sentiGroup.all())
     var chart = dc.lineChart("#EnvironmentalIssuesLine")
         .width(1800)
         .height(500)

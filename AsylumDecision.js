@@ -94,6 +94,6 @@ function AsylumDescisionPerYearLineChart(data) {
         .dimension(dateDim)
         .group(sentiGroup)
         .valueAccessor(function(d) {
-            return d.value
+            return d.value.average
         })
 }

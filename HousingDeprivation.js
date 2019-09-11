@@ -39,7 +39,6 @@ function dataConversion(data) {
 }
 
 function HousingDeprivationPerYearBarChart(CountryData) {
-    console.log(CountryData)
     var ndx = crossfilter(CountryData)
     var countryDim = ndx.dimension(dc.pluck("year"));
     var countryMix = countryDim.group().reduce(
