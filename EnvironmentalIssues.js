@@ -45,48 +45,6 @@ function dataConversion(data) {
 }
 
 
-function EnvironmentalIssuesPerYearLineChart(data) {
-    var ndx = crossfilter(data)
-    var dateDim = ndx.dimension(dc.pluck("year"));
-    var sentiGroup = dateDim.group().reduce(
-        function(p, v) {
-            //average calculator
-            p.count++;
-            p.total += v['count'];
-            p.average = p.total / p.count;
-            return p;
-        },
-        function(p, v) {
-            p.count--;
-            if (p.count == 0) {
-                p.total = 0;
-                p.average = 0;
-            } else {
-                p.total -= v['count'];
-                p.average = p.total / p.count;
-            }
-            return p;
-        },
-        function () {
-            return { count: 0, total: 0, average: 0};
-        }
-    )
-    console.log(sentiGroup.all())
-    var chart = dc.lineChart("#EnvironmentalIssuesLine")
-        .width(1800)
-        .height(500)
-        .margins({top: 10, right: 50, bottom: 50, left: 50})
-        .x(d3.scale.ordinal())
-        .xUnits(dc.units.ordinal)
-        .brushOn(false)
-        .xAxisLabel('Year')
-        .yAxisLabel('Housing Deprivation')
-        .dimension(dateDim)
-        .group(sentiGroup)
-        .valueAccessor(function(d) {
-            return d.value.average
-        })
-}
 function EnvironmentalIssuesPerYearBarChart(CountryData) {
     var ndx = crossfilter(CountryData)
     var countryDim = ndx.dimension(dc.pluck("year"));
@@ -128,4 +86,47 @@ function EnvironmentalIssuesPerYearBarChart(CountryData) {
         .xAxisLabel("Year")
         .yAxisLabel("Percentage of Housing Deprivation")
         .yAxis().ticks(20);
+}
+
+function EnvironmentalIssuesPerYearLineChart(data) {
+    var ndx = crossfilter(data)
+    var dateDim = ndx.dimension(dc.pluck("year"));
+    var sentiGroup = dateDim.group().reduce(
+        function(p, v) {
+            //average calculator
+            p.count++;
+            p.total += v['count'];
+            p.average = p.total / p.count;
+            return p;
+        },
+        function(p, v) {
+            p.count--;
+            if (p.count == 0) {
+                p.total = 0;
+                p.average = 0;
+            } else {
+                p.total -= v['count'];
+                p.average = p.total / p.count;
+            }
+            return p;
+        },
+        function () {
+            return { count: 0, total: 0, average: 0};
+        }
+    )
+    console.log(sentiGroup.all())
+    var chart = dc.lineChart("#EnvironmentalIssuesLine")
+        .width(1800)
+        .height(500)
+        .margins({top: 10, right: 50, bottom: 50, left: 50})
+        .x(d3.scale.ordinal())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .xAxisLabel('Year')
+        .yAxisLabel('Housing Deprivation')
+        .dimension(dateDim)
+        .group(sentiGroup)
+        .valueAccessor(function(d) {
+            return d.value.average
+        })
 }

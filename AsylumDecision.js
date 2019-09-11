@@ -38,23 +38,6 @@ function dataConversion(data) {
     return cleanData
 }
 
-function AsylumDescisionPerYearLineChart(data) {
-    var ndx = crossfilter(data)
-    var dateDim = ndx.dimension(dc.pluck("year"));
-    var sentiGroup = dateDim.group().reduceSum(dc.pluck("count"));
-    var chart = dc.lineChart("#AsylumDescisionLine")
-        .width(1800)
-        .height(500)
-        .margins({top: 10, right: 50, bottom: 50, left: 50})
-        .x(d3.scale.ordinal())
-        .xUnits(dc.units.ordinal)
-        .brushOn(false)
-        .xAxisLabel('Year')
-        .yAxisLabel('Asylum Decisions')
-        .dimension(dateDim)
-        .group(sentiGroup)
-}
-
 function AsylumDescisionPerYearBarChart(CountryData) {
     var ndx = crossfilter(CountryData)
     var countryDim = ndx.dimension(dc.pluck("year"));
@@ -71,4 +54,46 @@ function AsylumDescisionPerYearBarChart(CountryData) {
         .xAxisLabel("Year")
         .yAxisLabel("Asylum Descisions")
         .yAxis().ticks(20);
+}
+
+function AsylumDescisionPerYearLineChart(data) {
+    var ndx = crossfilter(data)
+    var dateDim = ndx.dimension(dc.pluck("year"));
+    var sentiGroup = dateDim.group().reduce(
+        function(p, v) {
+            //average calculator
+            p.count++;
+            p.total += parseInt(v['count']);
+            p.average = p.total / p.count;
+            return p;
+        },
+        function(p, v) {
+            p.count--;
+            if (p.count == 0) {
+                p.total = 0;
+                p.average = 0;
+            } else {
+                p.total -= v['count'];
+                p.average = p.total / p.count;
+            }
+            return p;
+        },
+        function () {
+            return { count: 0, total: 0, average: 0};
+        }
+    )
+    var chart = dc.lineChart("#AsylumDescisionLine")
+        .width(1800)
+        .height(500)
+        .margins({top: 10, right: 50, bottom: 50, left: 50})
+        .x(d3.scale.ordinal())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .xAxisLabel('Year')
+        .yAxisLabel('Asylum Decisions')
+        .dimension(dateDim)
+        .group(sentiGroup)
+        .valueAccessor(function(d) {
+            return d.value
+        })
 }
