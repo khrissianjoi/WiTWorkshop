@@ -77,7 +77,7 @@ function HousingDeprivationPerYearBarChart(CountryData) {
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Year")
-        .yAxisLabel("Percentage of Housing Deprivation")
+        .yAxisLabel("Average Percentage of Housing Deprivation")
         .yAxis().ticks(20);
 }
 

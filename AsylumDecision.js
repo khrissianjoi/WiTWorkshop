@@ -35,7 +35,6 @@ function dataConversion(data) {
             }
         }
     }
-    console.log(cleanData)
     return cleanData
 }
 
@@ -53,7 +52,7 @@ function AsylumDescisionPerYearBarChart(CountryData) {
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Year")
-        .yAxisLabel("Asylum Descisions")
+        .yAxisLabel("Asylum Descisions made")
         .yAxis().ticks(20);
 }
 

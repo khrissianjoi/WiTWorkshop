@@ -78,7 +78,7 @@ function EnvironmentalIssuesPerYearBarChart(CountryData) {
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Year")
-        .yAxisLabel("Percentage of Housing Deprivation")
+        .yAxisLabel("Average Percentage Enviromental Issues per Household")
         .yAxis().ticks(20);
 }
 
@@ -116,7 +116,7 @@ function EnvironmentalIssuesPerYearLineChart(data) {
         .xUnits(dc.units.ordinal)
         .brushOn(false)
         .xAxisLabel('Year')
-        .yAxisLabel('Housing Deprivation')
+        .yAxisLabel('Average Percentage Enviromental Issues per Household')
         .dimension(yearDim)
         .group(yearGroup)
         .valueAccessor(function(d) {
