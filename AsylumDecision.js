@@ -13,11 +13,11 @@ fetch(AsylumDecisionURL).then(response =>
 
 function makeGraphs(data) {
     data = dataConversion(data)
-    // AsylumDescisionPerYearBarChart(data)
-    // AsylumDescisionPerYearLineChart(data)
+    AsylumDescisionPerYearBarChart(data)
+    AsylumDescisionPerYearLineChart(data)
+    dc.renderAll();
     AsymlumDecisionHeatMap(data)
     // test(data)
-    // dc.renderAll();
 }
 
 function dataConversion(data) {
@@ -55,7 +55,7 @@ function AsylumDescisionPerYearBarChart(CountryData) {
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Year")
         .yAxisLabel("Total descisions made on Asylum Applications")
-        .yAxis().ticks(20);
+        .yAxis().ticks(20)
 }
 
 function AsylumDescisionPerYearLineChart(data) {

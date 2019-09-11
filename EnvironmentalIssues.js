@@ -13,10 +13,10 @@ fetch(EnvironmentalIssuesURL).then(response =>
 
 function makeGraphs(data) {
     data = dataConversion(data)
-    // EnvironmentalIssuesPerYearBarChart(data)
-    // EnvironmentalIssuesPerYearLineChart(data)
+    EnvironmentalIssuesPerYearBarChart(data)
+    EnvironmentalIssuesPerYearLineChart(data)
+    dc.renderAll();
     EnvironmentalIssuesHeatMap(data)
-    // dc.renderAll();
 }
 
 function dataConversion(data) {
@@ -167,7 +167,6 @@ function EnvironmentalIssuesHeatMap(data) {
         .dimension(runDim)
         .group(runGroup)
         .keyAccessor(function(d) { 
-            // console.log(d)
             return d.key[0]; })
         .valueAccessor(function(d) { return d.key[1]; })
         .colorAccessor(function(d) { return +d.value.average; })

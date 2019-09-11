@@ -13,10 +13,9 @@ fetch(HousingDeprivationURL).then(response =>
 
 function makeGraphs(data) {
     data = dataConversion(data)
-    // HousingDeprivationPerYearBarChart(data)
-    // HousingDeprivationPerYearLineChart(data)
-
-    // dc.renderAll();
+    HousingDeprivationPerYearBarChart(data)
+    HousingDeprivationPerYearLineChart(data)
+    dc.renderAll();
     HousingDeprivationHeatMap(data)
 }
 
@@ -80,7 +79,7 @@ function HousingDeprivationPerYearBarChart(data) {
         .xUnits(dc.units.ordinal)
         .xAxisLabel("Year")
         .yAxisLabel("Average percent of Housing Deprivation incidents")
-        .yAxis().ticks(20);
+        .yAxis().ticks(20)
 }
 
 function HousingDeprivationPerYearLineChart(data) {
